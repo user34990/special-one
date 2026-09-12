@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff0844, #ff416c, #ff758c);
+    color: white;
+}
+
+.page {
+    position: absolute;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.page.active {
+    display: flex;
+    animation: pageIn 0.8s ease;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Floating Hearts */
+
+.hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.heart {
+    position: absolute;
+    bottom: -50px;
+    color: rgba(255,255,255,0.75);
+    animation: floatHeart linear forwards;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0.6);
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(360deg) scale(1.3);
+        opacity: 0;
+    }
+}
+
+/* Card */
+
+.card {
+    position: relative;
+    z-index: 5;
+    width: min(92%, 500px);
+    padding: 30px 22px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 20px 60px rgba(100,0,30,0.35);
+}
+
+h1 {
+    font-size: clamp(30px, 8vw, 52px);
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: clamp(25px, 7vw, 38px);
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #ff1744;
+    background: white;
+    padding: 14px 25px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    transition: 0.25s;
+}
+
+button:hover {
+    transform: translateY(-3px) scale(1.03);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Camera */
+
+.camera-box {
+    width: 100%;
+    max-width: 380px;
+    margin: 15px auto;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #111;
+    border: 3px solid rgba(255,255,255,0.6);
+}
+
+video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+}
+
+#selfiePreview {
+    display: none;
+    width: 100%;
+    max-width: 300px;
+    margin: 15px auto;
+    border-radius: 20px;
+    border: 4px solid white;
+}
+
+/* Puzzle */
+
+.puzzle-box {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+}
+
+.puzzle-question {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.answer {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border-radius: 50px;
+    outline: none;
+    font-size: 17px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.answer::placeholder {
+    color: rgba(255,255,255,0.8);
+}
+
+.message {
+    min-height: 25px;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+/* Birthday */
+
+.birthday-heart {
+    font-size: 80px;
+    animation: beat 1s infinite;
+}
+
+@keyframes beat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.18);
+    }
+}
+
+.final-title {
+    color: white;
+    text-shadow: 0 0 20px #fff, 0 0 40px #ff1744;
+}
+
+.love-text {
+    font-size: 18px;
+}
+
+.small {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+/* Heart Blast */
+
+.blast-heart {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    font-size: 25px;
+    animation: blast 1.2s ease-out forwards;
+}
+
+@keyframes blast {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translate(
+                calc(-50% + var(--x)),
+                calc(-50% + var(--y))
+            )
+            rotate(var(--r))
+            scale(1.5);
+        opacity: 0;
+    }
+}
+
+.fadeText {
+    animation: fadeText 1s ease;
+}
+
+@keyframes fadeText {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<!-- PAGE 1 -->
+<section class="page active" id="page1">
+    <div class="card">
+        <div class="birthday-heart">❤️</div>
+
+        <h1>Hey You! 💕</h1>
+
+        <p>
+            Aaj ka din thoda sa special hai...
+            <br>
+            Lekin aage badhne ke liye pehle
+            <b>ek cute si selfie</b> chahiye. 😘
+        </p>
+
+        <div class="camera-box">
+            <video id="video" autoplay playsinline></video>
+        </div>
+
+        <canvas id="canvas" style="display:none;"></canvas>
+
+        <img id="selfiePreview" alt="Your Selfie">
+
+        <button id="cameraButton" onclick="takeSelfie()">
+            📸 Click My Selfie
+        </button>
+
+        <p class="small">
+            Camera permission allow karna zaroori hai ❤️
+        </p>
+    </div>
+</section>
+
+
+<!-- PAGE 2 : PUZZLE 1 -->
+<section class="page" id="page2">
+    <div class="card">
+        <div class="birthday-heart">🧩</div>
+
+        <h2>First Puzzle ❤️</h2>
+
+        <div class="puzzle-box">
+            <div class="puzzle-question">
+                Main tumhare liye kya hoon? 😏
+            </div>
+
+            <input
+                class="answer"
+                id="puzzleAnswer"
+                type="text"
+                placeholder="Answer likho..."
+                autocomplete="off"
+            >
+
+            <button onclick="checkPuzzle()">
+                Unlock ❤️
+            </button>
+
+            <div class="message" id="puzzleMessage"></div>
+        </div>
+    </div>
+</section>
+
+
+<!-- PAGE 3 : PASSWORD -->
+<section class="page" id="page3">
+    <div class="card">
+        <div class="birthday-heart">🔐</div>
+
+        <h2>One Last Secret 💕</h2>
+
+        <p>
+            Almost there...
+            <br>
+            Secret password enter karo 🔥
+        </p>
+
+        <input
+            class="answer"
+            id="password"
+            type="password"
+            inputmode="numeric"
+            maxlength="4"
+            placeholder="Enter 4 digit password"
+            autocomplete="off"
+        >
+
+        <button onclick="checkPassword()">
+            Open My Heart ❤️
+        </button>
+
+        <div class="message" id="passwordMessage"></div>
+    </div>
+</section>
+
+
+<!-- PAGE 4 : FINAL -->
+<section class="page" id="page4">
+    <div class="card fadeText">
+
+        <div class="birthday-heart">💖</div>
+
+        <h1 class="final-title">
+            Happy Birthday
+        </h1>
+
+        <h2>
+            My Special One ❤️
+        </h2>
+
+        <p class="love-text">
+            Tum meri life ke un special logon mein se ho
+            jinke bina sab kuch thoda incomplete sa lagta hai. 🥹❤️
+        </p>
+
+        <p class="love-text">
+            I hope tumhari smile hamesha aisi hi rahe,
+            tumhare saare dreams pure ho,
+            aur tumhari life pyaar, happiness aur
+            beautiful memories se bhari rahe. ✨
+        </p>
+
+        <p>
+            🎂 Happy Birthday once again! 🎂
+            <br><br>
+            <b>Stay happy. Stay beautiful. Stay mine. ❤️</b>
+        </p>
+
+        <div style="font-size:40px;">
+            💕 💖 💗 💘 💝
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+/* =========================
+   CAMERA
+========================= */
+
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const preview = document.getElementById("selfiePreview");
+
+let stream = null;
+
+async function startCamera() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "user"
+            },
+            audio: false
+        });
+
+        video.srcObject = stream;
+
+    } catch (error) {
+        alert(
+            "Camera access nahi mila. Please camera permission Allow karo ❤️"
+        );
+    }
+}
+
+startCamera();
+
+
+function takeSelfie() {
+
+    if (!stream) {
+        alert("Camera start nahi hua. Please permission Allow karo.");
+        return;
+    }
+
+    const width = video.videoWidth;
+    const height = video.videoHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(video, 0, 0, width, height);
+
+    const image = canvas.toDataURL("image/jpeg", 0.9);
+
+    preview.src = image;
+    preview.style.display = "block";
+
+    document.getElementById("cameraButton").innerHTML =
+        "❤️ Selfie Captured! Continue";
+
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+
+    setTimeout(() => {
+        heartBlast();
+        showPage("page2");
+    }, 700);
+}
+
+
+/* =========================
+   PAGE SWITCH
+========================= */
+
+function showPage(pageId) {
+
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    createHearts(18);
+}
+
+
+/* =========================
+   PUZZLE 1
+========================= */
+
+function checkPuzzle() {
+
+    const answer =
+        document.getElementById("puzzleAnswer")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const message =
+        document.getElementById("puzzleMessage");
+
+    /*
+       Yahan multiple answers allowed hain.
+       Agar apna custom answer chahiye,
+       acceptedAnswers me add/change kar sakte ho.
+    */
+
+    const acceptedAnswers = [
+        "special one",
+        "specialone",
+        "love",
+        "lover",
+        "jaan",
+        "janu",
+        "partner",
+        "my love",
+        "my special one"
+    ];
+
+    if (acceptedAnswers.includes(answer)) {
+
+        message.style.color = "#fff";
+        message.innerHTML = "Correct! 😍❤️";
+
+        setTimeout(() => {
+            heartBlast();
+            showPage("page3");
+        }, 700);
+
+    } else {
+
+        message.style.color = "#ffe4e4";
+        message.innerHTML =
+            "Hmm... ye answer nahi hai 😜 Try again ❤️";
+    }
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+function checkPassword() {
+
+    const password =
+        document.getElementById("password").value.trim();
+
+    const message =
+        document.getElementById("passwordMessage");
+
+    if (password === "0125") {
+
+        message.style.color = "#fff";
+        message.innerHTML = "Password Correct! 💖";
+
+        setTimeout(() => {
+            heartBlast();
+            setTimeout(() => {
+                showPage("page4");
+                massiveHeartBlast();
+            }, 500);
+        }, 600);
+
+    } else {
+
+        message.style.color = "#ffe4e4";
+        message.innerHTML =
+            "Wrong password 😜 Try again!";
+    }
+}
+
+
+/* =========================
+   FLOATING HEARTS
+========================= */
+
+function createHeart() {
+
+    const heart = document.createElement("div");
+
+    heart.className = "heart";
+
+    const hearts = [
+        "❤️",
+        "💖",
+        "💗",
+        "💕",
+        "💓",
+        "💘",
+        "💝",
+        "💞"
+    ];
+
+    heart.innerHTML =
+        hearts[Math.floor(Math.random() * hearts.length)];
+
+    heart.style.left =
+        Math.random() * 100 + "%";
+
+    heart.style.fontSize =
+        (15 + Math.random() * 30) + "px";
+
+    heart.style.animationDuration =
+        (4 + Math.random() * 6) + "s";
+
+    document.getElementById("hearts").appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 10000);
+}
+
+setInterval(createHeart, 350);
+
+function createHearts(amount) {
+
+    for (let i = 0; i < amount; i++) {
+
+        setTimeout(() => {
+            createHeart();
+        }, i * 80);
+    }
+}
+
+
+/* =========================
+   HEART BLAST
+========================= */
+
+function heartBlast() {
+
+    const amount = 45;
+
+    for (let i = 0; i < amount; i++) {
+
+        const heart =
+            document.createElement("div");
+
+        heart.className = "blast-heart";
+
+        const icons = [
+            "❤️",
+            "💖",
+            "💕",
+            "💗",
+            "💘",
+            "💝"
+        ];
+
+        heart.innerHTML =
+            icons[Math.floor(Math.random() * icons.length)];
+
+        const angle =
+            Math.random() * Math.PI * 2;
+
+        const distance =
+            100 + Math.random() * 350;
+
+        const x =
+            Math.cos(angle) * distance;
+
+        const y =
+            Math.sin(angle) * distance;
+
+        const rotation =
+            Math.random() * 720 - 360;
+
+        heart.style.setProperty(
+            "--x",
+            x + "px"
+        );
+
+        heart.style.setProperty(
+            "--y",
+            y + "px"
+        );
+
+        heart.style.setProperty(
+            "--r",
+            rotation + "deg"
+        );
+
+        heart.style.animationDuration =
+            (0.8 + Math.random() * 0.7) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 1600);
+    }
+}
+
+
+/* BIG FINAL BLAST */
+
+function massiveHeartBlast() {
+
+    let count = 0;
+
+    const interval = setInterval(() => {
+
+        heartBlast();
+
+        count++;
+
+        if (count >= 5) {
+            clearInterval(interval);
+        }
+
+    }, 500);
+}
+
+
+/* =========================
+   ENTER KEY SUPPORT
+========================= */
+
+document
+    .getElementById("puzzleAnswer")
+    .addEventListener("keydown", function(e) {
+
+        if (e.key === "Enter") {
+            checkPuzzle();
+        }
+
+    });
+
+
+document
+    .getElementById("password")
+    .addEventListener("keydown", function(e) {
+
+        if (e.key === "Enter") {
+            checkPassword();
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
